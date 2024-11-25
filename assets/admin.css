@@ -1,0 +1,68 @@
+#bsm-woocommerce-support-btn,
+#bsm-woocommerce-docs-btn {
+    float: right;
+    margin-left: 12px;
+}
+
+.wrap h1 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+}
+
+.wp-list-table .column-stock_qty {
+    text-align: center;
+}
+
+.wp-list-table input[type="number"] {
+    width: 80px;
+    text-align: center;
+}
+
+textarea {
+    font-family: monospace;
+    font-size: 1rem;
+}
+
+.description {
+    font-size: 0.9rem;
+    color: #666;
+    margin-top: 5px;
+}
+
+.wp-list-table tbody tr {
+    display: table-row !important;
+    visibility: visible !important;
+    color: black !important;
+}
+
+.bsm-success-message {
+    margin-left: 10px;
+    color: #28a745;
+    font-size: 0.9em;
+    font-weight: bold;
+    display: inline-block;
+}
+
+.bsm-overlay-success {
+    position: fixed;
+    top: 20%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #28a745;
+    color: #fff;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 5px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    animation: fadeOut 2s ease-out;
+}
+
+@keyframes fadeOut {
+    0% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
+}

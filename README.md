@@ -1,0 +1,1 @@
+# bulk-stock-management-for-woocommerce

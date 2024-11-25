@@ -17,7 +17,7 @@
   * Author URI:  https://robertdevore.com/
   * License:     GPL-2.0+
   * License URI: http://www.gnu.org/licenses/gpl-2.0.txt
-  * Text Domain: bulk-stock-management-for-woocommerce
+  * Text Domain: bsm-woocommerce
   * Domain Path: /languages
   * Update URI:  https://github.com/robertdevore/bulk-stock-management-for-woocommerce/
   */
@@ -41,6 +41,7 @@ $myUpdateChecker = PucFactory::buildUpdateChecker(
 $myUpdateChecker->setBranch( 'main' );
 
 // Define plugin constants.
+define( 'BSM_PLUGIN_VERSION', '1.0.0' );
 define( 'BSM_PLUGIN_PATH', plugin_dir_path( __FILE__ ) );
 define( 'BSM_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 

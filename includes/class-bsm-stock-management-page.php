@@ -90,7 +90,38 @@ class BSM_Stock_Management_Page {
                 $stock_table->search_box( __( 'Search Products', 'bsm-woocommerce' ), 'search-id' );
                 $stock_table->display();
                 ?>
-            </form>
+            </form>    
+            <div class="bsm-modal-overlay"></div>
+            <div id="bsm-edit-modal" class="bsm-modal">
+                <div class="bsm-modal-header">
+                    <h2><?php esc_html_e( 'Edit Product Stock', 'bsm-woocommerce' ); ?></h2>
+                    <button type="button" class="bsm-modal-close dashicons dashicons-no-alt"></button>
+                </div>
+                <div class="bsm-modal-body">
+                    <label for="bsm-stock-qty"><?php esc_html_e( 'Stock Quantity:', 'bsm-woocommerce' ); ?></label>
+                    <input type="number" id="bsm-stock-qty" value="" min="0" />
+
+                    <label for="bsm-stock-status"><?php esc_html_e( 'Stock Status:', 'bsm-woocommerce' ); ?></label>
+                    <select id="bsm-stock-status">
+                        <option value="instock"><?php esc_html_e( 'In Stock', 'bsm-woocommerce' ); ?></option>
+                        <option value="outofstock"><?php esc_html_e( 'Out of Stock', 'bsm-woocommerce' ); ?></option>
+                    </select>
+
+                    <label for="bsm-backorders"><?php esc_html_e( 'Backorders:', 'bsm-woocommerce' ); ?></label>
+                    <select id="bsm-backorders">
+                        <option value="no"><?php esc_html_e( 'Do Not Allow', 'bsm-woocommerce' ); ?></option>
+                        <option value="notify"><?php esc_html_e( 'Allow, Notify Customer', 'bsm-woocommerce' ); ?></option>
+                        <option value="yes"><?php esc_html_e( 'Allow', 'bsm-woocommerce' ); ?></option>
+                    </select>
+                </div>
+                <div class="bsm-modal-footer">
+                    <button type="button" id="bsm-edit-save" class="button button-primary">
+                        <?php esc_html_e( 'Save Changes', 'bsm-woocommerce' ); ?>
+                    </button>
+                    <button type="button" class="button bsm-modal-close"><?php esc_html_e( 'Cancel', 'bsm-woocommerce' ); ?></button>
+                </div>
+            </div>
+
         </div>
         <?php
     }

@@ -66,3 +66,96 @@ textarea {
         opacity: 0;
     }
 }
+
+/* Modal Overlay */
+.bsm-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 9998;
+    display: none;
+}
+
+/* Modal Box */
+.bsm-modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+    padding: 20px;
+    width: 400px;
+    z-index: 9999;
+    display: none;
+}
+
+/* Modal Header */
+.bsm-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #e5e5e5;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+}
+
+.bsm-modal-header h2 {
+    font-size: 18px;
+    margin: 0;
+}
+
+.bsm-modal-close {
+    background: none;
+    border: none;
+    font-size: 16px;
+    color: #999;
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.bsm-modal-close:hover {
+    color: #444;
+}
+
+/* Modal Body */
+.bsm-modal-body {
+    margin-bottom: 20px;
+}
+
+.bsm-modal-body label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.bsm-modal-body input,
+.bsm-modal-body select {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+/* Modal Footer */
+.bsm-modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.bsm-modal-footer .button {
+    padding: 6px 12px;
+}
+
+.bsm-success-message {
+    font-size: 16px;
+    color: #46b450;
+    text-align: center;
+    margin: 20px 0;
+}

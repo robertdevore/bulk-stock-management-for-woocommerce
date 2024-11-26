@@ -199,16 +199,25 @@ class BSM_Stock_List_Table extends WP_List_Table {
     /**
      * Renders the actions column.
      *
+     * Includes styled edit and delete buttons with icons.
+     *
      * @param array $item Row data.
      * 
      * @since  1.0.0
-     * @return string Action buttons HTML.
+     * @return string HTML for action buttons.
      */
     public function column_actions( $item ) {
         return sprintf(
-            '<a href="%s" class="button">%s</a>',
-            esc_url( admin_url( 'post.php?post=' . $item['ID'] . '&action=edit' ) ),
-            esc_html__( 'Edit', 'bsm-woocommerce' )
+            '<button type="button" class="button bsm-edit-button" data-product-id="%d">
+                <span class="dashicons dashicons-edit"></span> %s
+            </button>
+            <button type="button" class="button button-secondary bsm-delete-button" data-product-id="%d">
+                <span class="dashicons dashicons-trash"></span> %s
+            </button>',
+            esc_attr( $item['ID'] ),
+            esc_html__( 'Edit', 'bsm-woocommerce' ),
+            esc_attr( $item['ID'] ),
+            esc_html__( 'Delete', 'bsm-woocommerce' )
         );
     }
 
@@ -300,3 +309,95 @@ class BSM_Stock_List_Table extends WP_List_Table {
         }
     }
 }
+
+add_action( 'wp_ajax_bsm_delete_product', function () {
+    // Verify nonce
+    check_ajax_referer( 'bsm_admin_nonce', 'nonce' );
+
+    // Sanitize and validate product ID
+    $product_id = isset( $_POST['product_id'] ) ? intval( $_POST['product_id'] ) : 0;
+    if ( ! $product_id ) {
+        wp_send_json_error( esc_html__( 'Invalid product ID.', 'bsm-woocommerce' ) );
+    }
+
+    // Attempt to trash the product
+    $result = wp_trash_post( $product_id );
+    if ( ! $result ) {
+        wp_send_json_error( esc_html__( 'Failed to delete the product.', 'bsm-woocommerce' ) );
+    }
+
+    wp_send_json_success( esc_html__( 'Product moved to trash.', 'bsm-woocommerce' ) );
+} );
+
+add_action( 'wp_ajax_bsm_update_stock_fields', function () {
+    // Verify nonce
+    check_ajax_referer( 'bsm_admin_nonce', 'nonce' );
+
+    $product_id    = intval( $_POST['product_id'] ?? 0 );
+    $stock_qty     = intval( $_POST['stock_qty'] ?? 0 );
+    $stock_status  = sanitize_text_field( $_POST['stock_status'] ?? '' );
+    $backorders    = sanitize_text_field( $_POST['backorders'] ?? '' );
+
+    if ( ! $product_id ) {
+        wp_send_json_error( __( 'Invalid product ID.', 'bsm-woocommerce' ) );
+    }
+
+    $product = wc_get_product( $product_id );
+    if ( ! $product ) {
+        wp_send_json_error( __( 'Product not found.', 'bsm-woocommerce' ) );
+    }
+
+    try {
+        // Update stock quantity
+        $product->set_stock_quantity( $stock_qty );
+
+        // Update stock status
+        if ( $stock_status ) {
+            $product->set_stock_status( $stock_status );
+        }
+
+        // Update backorders
+        if ( $backorders ) {
+            $product->set_backorders( $backorders );
+        }
+
+        // Save product changes
+        $product->save();
+
+        // Manually update stock meta for consistency
+        update_post_meta( $product_id, '_stock', $stock_qty );
+        update_post_meta( $product_id, '_stock_status', $stock_status );
+        update_post_meta( $product_id, '_backorders', $backorders );
+
+        // Trigger WooCommerce stock change hooks
+        do_action( 'woocommerce_product_set_stock', $product );
+        do_action( 'woocommerce_product_stock_changed', $product_id );
+
+        wp_send_json_success( __( 'Product updated successfully.', 'bsm-woocommerce' ) );
+    } catch ( Exception $e ) {
+        wp_send_json_error( sprintf( __( 'Failed to update product: %s', 'bsm-woocommerce' ), $e->getMessage() ) );
+    }
+} );
+
+
+add_action( 'wp_ajax_bsm_get_product_data', function () {
+    // Verify nonce
+    check_ajax_referer( 'bsm_admin_nonce', 'nonce' );
+
+    $product_id = intval( $_POST['product_id'] ?? 0 );
+    if ( ! $product_id ) {
+        wp_send_json_error( __( 'Invalid product ID.', 'bsm-woocommerce' ) );
+    }
+
+    $product = wc_get_product( $product_id );
+    if ( ! $product ) {
+        wp_send_json_error( __( 'Product not found.', 'bsm-woocommerce' ) );
+    }
+
+    // Send product data
+    wp_send_json_success( [
+        'stock_qty'    => $product->get_stock_quantity(),
+        'stock_status' => $product->get_stock_status(),
+        'backorders'   => $product->get_backorders(),
+    ] );
+} );

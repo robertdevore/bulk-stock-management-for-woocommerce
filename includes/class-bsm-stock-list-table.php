@@ -1,28 +1,18 @@
 <?php
 /**
- * BSM_Stock_List_Table Class
+ * Class BSM_Stock_List_Table
  *
  * Manages the Bulk Stock Management stock list table in WordPress admin.
  *
  * @package BSM_WooCommerce
  */
 
-// Ensure WP_List_Table is available.
-if ( ! class_exists( 'WP_List_Table' ) ) {
-    require_once ABSPATH . 'wp-admin/includes/class-wp-list-table.php';
-}
-
-/**
- * Class BSM_Stock_List_Table
- *
- * Extends WP_List_Table to display product stock data.
- */
 class BSM_Stock_List_Table extends WP_List_Table {
 
     /**
      * Constructor.
      *
-     * Initializes the table class.
+     * Initializes the list table with default parameters.
      *
      * @since 1.0.0
      */
@@ -35,9 +25,9 @@ class BSM_Stock_List_Table extends WP_List_Table {
     }
 
     /**
-     * Define table columns.
+     * Defines the columns for the table.
      *
-     * @since  1.0.0
+     * @since 1.0.0
      * @return array Associative array of column headers.
      */
     public function get_columns() {
@@ -52,9 +42,9 @@ class BSM_Stock_List_Table extends WP_List_Table {
     }
 
     /**
-     * Define sortable columns.
+     * Defines sortable columns.
      *
-     * @since  1.0.0
+     * @since 1.0.0
      * @return array Associative array of sortable columns.
      */
     public function get_sortable_columns() {
@@ -66,9 +56,9 @@ class BSM_Stock_List_Table extends WP_List_Table {
     }
 
     /**
-     * Define bulk actions.
+     * Defines bulk actions available for the table.
      *
-     * @since  1.0.0
+     * @since 1.0.0
      * @return array Associative array of bulk actions.
      */
     public function get_bulk_actions() {
@@ -79,28 +69,60 @@ class BSM_Stock_List_Table extends WP_List_Table {
     }
 
     /**
-     * Prepare items for display.
+     * Prepares the items for the list table.
      *
-     * Fetches and processes the product data for the table, including pagination.
+     * Retrieves and processes product data for display, including search, filters, and pagination.
      *
-     * @since  1.0.0
+     * @since 1.0.0
      * @return void
      */
     public function prepare_items() {
-        $args = [
-            'limit'   => -1,
-            'orderby' => sanitize_text_field( $_GET['orderby'] ?? 'name' ),
-            'order'   => sanitize_text_field( $_GET['order'] ?? 'asc' ),
-            'return'  => 'ids',
-        ];
+        global $wpdb;
+    
+        $search_term  = isset( $_REQUEST['s'] ) ? sanitize_text_field( $_REQUEST['s'] ) : ''; // Search term
+        $stock_status = isset( $_REQUEST['stock_status'] ) ? sanitize_text_field( $_REQUEST['stock_status'] ) : ''; // Stock status filter
+    
+        // Base query.
+        $query = "SELECT ID FROM {$wpdb->posts} p";
+        $where = " WHERE p.post_type = 'product' AND p.post_status = 'publish'";
 
-        if ( isset( $_GET['stock_status'] ) && in_array( $_GET['stock_status'], [ 'instock', 'outofstock' ], true ) ) {
-            $args['stock_status'] = sanitize_text_field( $_GET['stock_status'] );
+        // Add search term conditions.
+        if ( $search_term ) {
+            $query .= " LEFT JOIN {$wpdb->postmeta} pm ON p.ID = pm.post_id";
+            $where .= $wpdb->prepare(
+                " AND (p.post_title LIKE %s OR (pm.meta_key = '_sku' AND pm.meta_value LIKE %s))",
+                '%' . $wpdb->esc_like( $search_term ) . '%',
+                '%' . $wpdb->esc_like( $search_term ) . '%'
+            );
         }
 
-        $product_ids = wc_get_products( $args );
-        $data        = [];
+        // Add stock status condition.
+        if ( $stock_status ) {
+            $query .= " LEFT JOIN {$wpdb->postmeta} pm_stock_status ON p.ID = pm_stock_status.post_id";
+            $where .= $wpdb->prepare(
+                " AND (pm_stock_status.meta_key = '_stock_status' AND pm_stock_status.meta_value = %s)",
+                $stock_status
+            );
+        }
 
+        // Combine query and where clause.
+        $query .= $where . " GROUP BY p.ID";
+
+        // Pagination.
+        $per_page     = 40;
+        $current_page = $this->get_pagenum();
+        $offset       = ( $current_page - 1 ) * $per_page;
+
+        // Get total items
+        $total_items = $wpdb->query( $query );
+
+        // Add limit for pagination
+        $query .= $wpdb->prepare( " LIMIT %d OFFSET %d", $per_page, $offset );
+
+        // Fetch product IDs
+        $product_ids = $wpdb->get_col( $query );
+
+        $data = [];
         foreach ( $product_ids as $product_id ) {
             $product = wc_get_product( $product_id );
             if ( ! $product ) {
@@ -116,11 +138,7 @@ class BSM_Stock_List_Table extends WP_List_Table {
             ];
         }
 
-        $per_page     = 10;
-        $current_page = $this->get_pagenum();
-        $total_items  = count( $data );
-
-        $this->items = array_slice( $data, ( $current_page - 1 ) * $per_page, $per_page );
+        $this->items = $data;
 
         $this->_column_headers = [
             $this->get_columns(),
@@ -136,13 +154,11 @@ class BSM_Stock_List_Table extends WP_List_Table {
     }
 
     /**
-     * Default column renderer.
-     *
-     * Outputs the value for a given column and item.
+     * Renders default column content.
      *
      * @param array  $item        Row data.
      * @param string $column_name Column name.
-     *
+     * 
      * @since  1.0.0
      * @return string Column content.
      */
@@ -151,10 +167,10 @@ class BSM_Stock_List_Table extends WP_List_Table {
     }
 
     /**
-     * Render the checkbox column for bulk actions.
+     * Renders the checkbox column for bulk actions.
      *
      * @param array $item Row data.
-     *
+     * 
      * @since  1.0.0
      * @return string Checkbox HTML.
      */
@@ -163,7 +179,7 @@ class BSM_Stock_List_Table extends WP_List_Table {
     }
 
     /**
-     * Render the stock quantity column.
+     * Renders the stock quantity column.
      *
      * Outputs an editable input field for stock quantity.
      *
@@ -181,10 +197,10 @@ class BSM_Stock_List_Table extends WP_List_Table {
     }
 
     /**
-     * Render the actions column.
+     * Renders the actions column.
      *
      * @param array $item Row data.
-     *
+     * 
      * @since  1.0.0
      * @return string Action buttons HTML.
      */
@@ -197,11 +213,11 @@ class BSM_Stock_List_Table extends WP_List_Table {
     }
 
     /**
-     * Display table rows.
+     * Displays the table rows.
      *
      * Iterates over the items and renders each row.
      *
-     * @since  1.0.0
+     * @since 1.0.0
      * @return void
      */
     public function display_rows() {
@@ -211,11 +227,9 @@ class BSM_Stock_List_Table extends WP_List_Table {
     }
 
     /**
-     * Display a message when no items are found.
+     * Displays a message when no items are found.
      *
-     * Outputs a user-friendly message.
-     *
-     * @since  1.0.0
+     * @since 1.0.0
      * @return void
      */
     public function no_items() {
@@ -223,13 +237,13 @@ class BSM_Stock_List_Table extends WP_List_Table {
     }
 
     /**
-     * Render additional controls above the table.
+     * Renders additional controls above the table.
      *
      * Outputs a dropdown to filter products by stock status.
      *
      * @param string $which Top or bottom position.
-     *
-     * @since  1.0.0
+     * 
+     * @since 1.0.0
      * @return void
      */
     public function extra_tablenav( $which ) {
@@ -238,16 +252,51 @@ class BSM_Stock_List_Table extends WP_List_Table {
             <div class="alignleft actions">
                 <select name="stock_status">
                     <option value=""><?php esc_html_e( 'All Stock Statuses', 'bsm-woocommerce' ); ?></option>
-                    <option value="instock" <?php selected( $_GET['stock_status'] ?? '', 'instock' ); ?>>
+                    <option value="instock" <?php selected( $_REQUEST['stock_status'] ?? '', 'instock' ); ?>>
                         <?php esc_html_e( 'In Stock', 'bsm-woocommerce' ); ?>
                     </option>
-                    <option value="outofstock" <?php selected( $_GET['stock_status'] ?? '', 'outofstock' ); ?>>
+                    <option value="outofstock" <?php selected( $_REQUEST['stock_status'] ?? '', 'outofstock' ); ?>>
                         <?php esc_html_e( 'Out of Stock', 'bsm-woocommerce' ); ?>
                     </option>
                 </select>
                 <?php submit_button( esc_html__( 'Filter', 'bsm-woocommerce' ), 'button', '', false ); ?>
             </div>
             <?php
+        }
+    }
+
+    /**
+     * Processes bulk actions.
+     *
+     * Updates stock status for selected products based on the selected bulk action.
+     *
+     * @since 1.0.0
+     * @return void
+     */
+    public function process_bulk_action() {
+        $action      = $this->current_action();
+        $product_ids = array_map( 'intval', wp_unslash( $_REQUEST['product'] ?? [] ) );
+
+        if ( empty( $product_ids ) ) {
+            return;
+        }
+
+        foreach ( $product_ids as $product_id ) {
+            $product = wc_get_product( $product_id );
+            if ( ! $product ) {
+                continue;
+            }
+
+            switch ( $action ) {
+                case 'mark_in_stock':
+                    $product->set_stock_status( 'instock' );
+                    break;
+                case 'mark_out_of_stock':
+                    $product->set_stock_status( 'outofstock' );
+                    break;
+            }
+
+            $product->save();
         }
     }
 }

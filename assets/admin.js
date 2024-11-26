@@ -96,7 +96,7 @@ jQuery(document).ready(function ($) {
                 // Reload table after a short delay
                 setTimeout(function () {
                     location.reload();
-                }, 2000);
+                }, 1000);
             } else {
                 alert("Error: " + response.data);
             }

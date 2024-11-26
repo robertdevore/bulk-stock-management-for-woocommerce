@@ -49,6 +49,7 @@ define( 'BSM_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 require_once BSM_PLUGIN_PATH . 'includes/class-bsm-stock-management-page.php';
 require_once BSM_PLUGIN_PATH . 'includes/class-bsm-stock-list-table.php';
 require_once BSM_PLUGIN_PATH . 'includes/class-bsm-settings-page.php';
+require_once BSM_PLUGIN_PATH . 'includes/class-bsm-stock-reports-page.php';
 
 // Initialize plugin.
 function bsm_init_plugin() {
@@ -64,6 +65,10 @@ function bsm_init_plugin() {
     if ( is_admin() ) {
         new BSM_Stock_Management_Page();
         new BSM_Settings_Page();
+
+        if ( 'yes' === get_option( 'bsm_enable_reporting', 'yes' ) ) {
+            new BSM_Stock_Reports_Page();
+        }
     }
 }
 add_action( 'plugins_loaded', 'bsm_init_plugin' );

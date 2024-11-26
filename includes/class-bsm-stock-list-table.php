@@ -81,71 +81,78 @@ class BSM_Stock_List_Table extends WP_List_Table {
     
         $search_term  = isset( $_REQUEST['s'] ) ? sanitize_text_field( $_REQUEST['s'] ) : ''; // Search term
         $stock_status = isset( $_REQUEST['stock_status'] ) ? sanitize_text_field( $_REQUEST['stock_status'] ) : ''; // Stock status filter
+        $orderby      = isset( $_REQUEST['orderby'] ) ? sanitize_sql_orderby( $_REQUEST['orderby'] ) : 'name'; // Sort column
+        $order        = isset( $_REQUEST['order'] ) && in_array( strtolower( $_REQUEST['order'] ), [ 'asc', 'desc' ], true ) ? strtoupper( $_REQUEST['order'] ) : 'ASC'; // Sort direction
     
-        // Base query.
-        $query = "SELECT ID FROM {$wpdb->posts} p";
-        $where = " WHERE p.post_type = 'product' AND p.post_status = 'publish'";
-
-        // Add search term conditions.
+        // Map table columns to database columns
+        $sortable_columns_map = [
+            'name'      => 'p.post_title',
+            'sku'       => "pm.meta_value",
+            'stock_qty' => "CAST(pm_stock.meta_value AS UNSIGNED)",
+        ];
+        $orderby_column = $sortable_columns_map[$orderby] ?? 'p.post_title';
+    
+        // Base query
+        $query = "SELECT p.ID, p.post_title, 
+                         pm.meta_value AS sku, 
+                         pm_stock.meta_value AS stock_qty, 
+                         pm_stock_status.meta_value AS stock_status
+                  FROM {$wpdb->posts} p 
+                  LEFT JOIN {$wpdb->postmeta} pm ON p.ID = pm.post_id AND pm.meta_key = '_sku'
+                  LEFT JOIN {$wpdb->postmeta} pm_stock ON p.ID = pm_stock.post_id AND pm_stock.meta_key = '_stock'
+                  LEFT JOIN {$wpdb->postmeta} pm_stock_status ON p.ID = pm_stock_status.post_id AND pm_stock_status.meta_key = '_stock_status'
+                  WHERE p.post_type = 'product' AND p.post_status = 'publish'";
+    
+        // Add search term
         if ( $search_term ) {
-            $query .= " LEFT JOIN {$wpdb->postmeta} pm ON p.ID = pm.post_id";
-            $where .= $wpdb->prepare(
-                " AND (p.post_title LIKE %s OR (pm.meta_key = '_sku' AND pm.meta_value LIKE %s))",
+            $query .= $wpdb->prepare(
+                " AND (p.post_title LIKE %s OR pm.meta_value LIKE %s)",
                 '%' . $wpdb->esc_like( $search_term ) . '%',
                 '%' . $wpdb->esc_like( $search_term ) . '%'
             );
         }
-
-        // Add stock status condition.
+    
+        // Add stock status filter
         if ( $stock_status ) {
-            $query .= " LEFT JOIN {$wpdb->postmeta} pm_stock_status ON p.ID = pm_stock_status.post_id";
-            $where .= $wpdb->prepare(
-                " AND (pm_stock_status.meta_key = '_stock_status' AND pm_stock_status.meta_value = %s)",
+            $query .= $wpdb->prepare(
+                " AND pm_stock_status.meta_value = %s",
                 $stock_status
             );
         }
-
-        // Combine query and where clause.
-        $query .= $where . " GROUP BY p.ID";
-
-        // Pagination.
+    
+        // Sorting
+        $query .= " GROUP BY p.ID ORDER BY $orderby_column $order";
+    
+        // Pagination
         $per_page     = 40;
         $current_page = $this->get_pagenum();
         $offset       = ( $current_page - 1 ) * $per_page;
-
-        // Get total items
-        $total_items = $wpdb->query( $query );
-
-        // Add limit for pagination
+    
+        $total_items_query = "SELECT COUNT(*) FROM ({$query}) AS total_items";
+        $total_items       = $wpdb->get_var( $total_items_query );
+    
         $query .= $wpdb->prepare( " LIMIT %d OFFSET %d", $per_page, $offset );
-
-        // Fetch product IDs
-        $product_ids = $wpdb->get_col( $query );
-
-        $data = [];
-        foreach ( $product_ids as $product_id ) {
-            $product = wc_get_product( $product_id );
-            if ( ! $product ) {
-                continue;
-            }
-
-            $data[] = [
-                'ID'           => $product->get_id(),
-                'name'         => $product->get_name(),
-                'sku'          => $product->get_sku() ?: __( 'N/A', 'bsm-woocommerce' ),
-                'stock_qty'    => $product->get_stock_quantity() ?? __( 'N/A', 'bsm-woocommerce' ),
-                'stock_status' => $product->get_stock_status() === 'instock' ? __( 'In Stock', 'bsm-woocommerce' ) : __( 'Out of Stock', 'bsm-woocommerce' ),
+    
+        $results = $wpdb->get_results( $query, ARRAY_A );
+    
+        // Prepare items
+        $this->items = array_map( function ( $row ) {
+            return [
+                'ID'           => $row['ID'],
+                'name'         => $row['post_title'],
+                'sku'          => $row['sku'] ?: __( 'N/A', 'bsm-woocommerce' ),
+                'stock_qty'    => intval( $row['stock_qty'] ),
+                'stock_status' => $row['stock_status'] === 'instock' ? __( 'In Stock', 'bsm-woocommerce' ) : __( 'Out of Stock', 'bsm-woocommerce' ),
             ];
-        }
-
-        $this->items = $data;
-
+        }, $results );
+    
+        // Set up table headers and pagination
         $this->_column_headers = [
             $this->get_columns(),
             [],
             $this->get_sortable_columns(),
         ];
-
+    
         $this->set_pagination_args( [
             'total_items' => $total_items,
             'per_page'    => $per_page,

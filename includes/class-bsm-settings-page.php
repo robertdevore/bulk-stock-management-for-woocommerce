@@ -52,8 +52,18 @@ class BSM_Settings_Page {
 
         register_setting( 'bsm_settings_group', 'bsm_default_filters', [
             'type'              => 'string',
-            'sanitize_callback' => 'wp_kses_post',
             'default'           => '',
+            'sanitize_callback' => function( $value ) {
+                if ( json_decode( $value ) === null && json_last_error() !== JSON_ERROR_NONE ) {
+                    add_settings_error(
+                        'bsm_default_filters',
+                        'invalid_json',
+                        esc_html__( 'The default filters must be valid JSON.', 'bsm-woocommerce' )
+                    );
+                    return '';
+                }
+                return wp_kses_post( $value );
+            },
         ] );
 
         add_settings_section(
@@ -75,6 +85,37 @@ class BSM_Settings_Page {
             'bsm-settings',
             'bsm_general_settings'
         );
+
+        add_settings_field(
+            'bsm_report_columns',
+            esc_html__( 'Report Columns', 'bsm-woocommerce' ),
+            function () {
+                $options = get_option( 'bsm_report_columns', [
+                    'product_name' => 'yes',
+                    'sku'          => 'yes',
+                    'stock_qty'    => 'yes',
+                    'stock_status' => 'yes',
+                    'backorders'   => 'yes',
+                ] );
+        
+                $columns = [
+                    'product_name' => esc_html__( 'Product Name', 'bsm-woocommerce' ),
+                    'sku'          => esc_html__( 'SKU', 'bsm-woocommerce' ),
+                    'stock_qty'    => esc_html__( 'Stock Quantity', 'bsm-woocommerce' ),
+                    'stock_status' => esc_html__( 'Stock Status', 'bsm-woocommerce' ),
+                    'backorders'   => esc_html__( 'Backorders', 'bsm-woocommerce' ),
+                ];
+        
+                foreach ( $columns as $key => $label ) {
+                    echo '<label style="display:block; margin-bottom: 8px;">';
+                    echo '<input type="checkbox" name="bsm_report_columns[' . esc_attr( $key ) . ']" value="yes" ' . checked( $options[ $key ] ?? '', 'yes', false ) . ' />';
+                    echo ' ' . esc_html( $label );
+                    echo '</label>';
+                }
+            },
+            'bsm-settings',
+            'bsm_general_settings'
+        );        
 
         add_settings_field(
             'bsm_default_filters',

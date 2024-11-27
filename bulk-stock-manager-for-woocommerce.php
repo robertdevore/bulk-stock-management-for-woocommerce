@@ -10,7 +10,7 @@
   * @wordpress-plugin
   *
   * Plugin Name: Bulk Stock Management for WooCommerce®
-  * Description: Manage stock levels and generate stock reports for WooCommerce products.
+  * Description: Manage stock levels and generate stock reports for WooCommerce® products.
   * Plugin URI:  https://github.com/robertdevore/bulk-stock-management-for-woocommerce/
   * Version:     1.0.0
   * Author:      Robert DeVore
@@ -32,9 +32,9 @@ require 'includes/plugin-update-checker/plugin-update-checker.php';
 use YahnisElsts\PluginUpdateChecker\v5\PucFactory;
 
 $myUpdateChecker = PucFactory::buildUpdateChecker(
-    'https://github.com/robertdevore/brands-for-woocommerce/',
+    'https://github.com/robertdevore/bulk-stock-management-for-woocommerce/',
     __FILE__,
-    'brands-for-woocommerce'
+    'bulk-stock-management-for-woocommerce'
 );
 
 // Set the branch that contains the stable release.
@@ -51,7 +51,16 @@ require_once BSM_PLUGIN_PATH . 'includes/class-bsm-stock-list-table.php';
 require_once BSM_PLUGIN_PATH . 'includes/class-bsm-settings-page.php';
 require_once BSM_PLUGIN_PATH . 'includes/class-bsm-stock-reports-page.php';
 
-// Initialize plugin.
+/**
+ * Initializes the Bulk Stock Management plugin.
+ *
+ * This function checks if WooCommerce is active before initializing
+ * the admin features of the Bulk Stock Management plugin. If WooCommerce
+ * is not active, an admin notice is displayed to inform the user.
+ *
+ * @since  1.0.0
+ * @return void
+ */
 function bsm_init_plugin() {
     // Check WooCommerce is active.
     if ( ! class_exists( 'WooCommerce' ) ) {

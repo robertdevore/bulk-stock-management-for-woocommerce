@@ -54,6 +54,7 @@ class BSM_Stock_Management_Page {
     /**
      * Renders the stock management page.
      *
+     * @since  1.0.0
      * @return void
      */
     public function render_stock_management_page() {
@@ -63,11 +64,11 @@ class BSM_Stock_Management_Page {
                 <?php esc_html_e( 'Bulk Stock Management', 'bsm-woocommerce' ); ?>
                 <a id="bsm-woocommerce-support-btn" href="https://robertdevore.com/contact/" target="_blank" class="button button-alt" style="margin-left: 10px;">
                     <span class="dashicons dashicons-format-chat" style="vertical-align: middle;"></span>
-                    <?php esc_html_e( 'Support', 'bluesky-feed' ); ?>
+                    <?php esc_html_e( 'Support', 'bsm-woocommerce' ); ?>
                 </a>
                 <a id="bsm-woocommerce-docs-btn" href="https://robertdevore.com/articles/bulk-stock-management-for-woocommerce/" target="_blank" class="button button-alt" style="margin-left: 5px;">
                     <span class="dashicons dashicons-media-document" style="vertical-align: middle;"></span>
-                    <?php esc_html_e( 'Documentation', 'bluesky-feed' ); ?>
+                    <?php esc_html_e( 'Documentation', 'bsm-woocommerce' ); ?>
                 </a>
             </h1>
             <hr />
@@ -87,10 +88,10 @@ class BSM_Stock_Management_Page {
             ?>
             <form method="post">
                 <?php
-                $stock_table->search_box( __( 'Search Products', 'bsm-woocommerce' ), 'search-id' );
+                $stock_table->search_box( esc_html__( 'Search Products', 'bsm-woocommerce' ), 'search-id' );
                 $stock_table->display();
                 ?>
-            </form>    
+            </form>
             <div class="bsm-modal-overlay"></div>
             <div id="bsm-edit-modal" class="bsm-modal">
                 <div class="bsm-modal-header">

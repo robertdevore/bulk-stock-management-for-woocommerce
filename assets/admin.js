@@ -1,7 +1,7 @@
 jQuery(document).ready(function ($) {
     $(".bsm-stock-input").on("change", function () {
         let productId = $(this).data("product-id");
-        let newStock = parseInt($(this).val(), 10); // Ensure stock is an integer.
+        let newStock = parseInt($(this).val(), 10);
         let inputField = $(this);
 
         // Validate stock value.
@@ -9,10 +9,6 @@ jQuery(document).ready(function ($) {
             alert("Invalid stock value.");
             return;
         }
-
-        console.log("Sending AJAX request with:");
-        console.log("Product ID:", productId);
-        console.log("New Stock:", newStock);
 
         // Send AJAX request.
         $.post(bsm_admin.ajaxurl, {
@@ -22,7 +18,6 @@ jQuery(document).ready(function ($) {
             nonce: bsm_admin.nonce,
         })
         .done(function (response) {
-            console.log("AJAX Response:", response);
             if (response.success) {
                 $("body").append('<div class="bsm-overlay-success">Stock Updated Successfully!</div>');
                 $(".bsm-overlay-success").fadeOut(2000, function () {
@@ -37,12 +32,12 @@ jQuery(document).ready(function ($) {
         });
     });
 
-    // Open Edit Modal
+    // Open Edit Modal.
     $(".bsm-edit-button").on("click", function (e) {
-        e.preventDefault(); // Prevent default action
+        e.preventDefault();
         let productId = $(this).data("product-id");
-    
-        // Preload product data via AJAX
+
+        // Preload product data via AJAX.
         $.post(bsm_admin.ajaxurl, {
             action: "bsm_get_product_data",
             product_id: productId,
@@ -50,12 +45,12 @@ jQuery(document).ready(function ($) {
         })
         .done(function (response) {
             if (response.success) {
-                // Populate modal fields with product data
+                // Populate modal fields with product data.
                 $("#bsm-stock-qty").val(response.data.stock_qty);
                 $("#bsm-stock-status").val(response.data.stock_status);
                 $("#bsm-backorders").val(response.data.backorders);
-    
-                // Open modal
+
+                // Open modal.
                 $("#bsm-edit-modal").data("product-id", productId).fadeIn();
                 $(".bsm-modal-overlay").fadeIn();
             } else {
@@ -66,17 +61,17 @@ jQuery(document).ready(function ($) {
             alert("Failed to fetch product data.");
         });
     });
-    
-    // Save Changes from Edit Modal
+
+    // Save Changes from Edit Modal.
     $("#bsm-edit-save").on("click", function (e) {
-        e.preventDefault(); // Prevent form submission
+        e.preventDefault();
         let modal = $("#bsm-edit-modal");
         let productId = modal.data("product-id");
         let stockQty = parseInt($("#bsm-stock-qty").val(), 10);
         let stockStatus = $("#bsm-stock-status").val();
         let backorders = $("#bsm-backorders").val();
-    
-        // AJAX to update fields
+
+        // AJAX to update fields.
         $.post(bsm_admin.ajaxurl, {
             action: "bsm_update_stock_fields",
             product_id: productId,
@@ -87,13 +82,13 @@ jQuery(document).ready(function ($) {
         })
         .done(function (response) {
             if (response.success) {
-                // Replace modal content with success message
+                // Replace modal content with success message.
                 modal.find(".bsm-modal-body").html('<p class="bsm-success-message">Changes saved successfully!</p>');
-    
-                // Hide buttons
+
+                // Hide buttons.
                 $("#bsm-edit-save, .bsm-modal-close").hide();
-    
-                // Reload table after a short delay
+
+                // Reload table after a short delay.
                 setTimeout(function () {
                     location.reload();
                 }, 1000);
@@ -105,13 +100,13 @@ jQuery(document).ready(function ($) {
             alert("AJAX request failed. Please try again.");
         });
     });
-    
-    // Open Delete Modal
+
+    // Open Delete Modal.
     $(".bsm-delete-button").on("click", function (e) {
-        e.preventDefault(); // Prevent default button behavior
+        e.preventDefault();
         let productId = $(this).data("product-id");
         if (confirm("Are you sure you want to delete this product?")) {
-            // AJAX to delete product
+            // AJAX to delete product.
             $.post(bsm_admin.ajaxurl, {
                 action: "bsm_delete_product",
                 product_id: productId,
@@ -120,7 +115,7 @@ jQuery(document).ready(function ($) {
             .done(function (response) {
                 if (response.success) {
                     alert(response.data);
-                    location.reload(); // Refresh table
+                    location.reload();
                 } else {
                     alert("Error: " + response.data);
                 }
@@ -131,10 +126,9 @@ jQuery(document).ready(function ($) {
         }
     });
 
-    // Close Modals
+    // Close Modals.
     $(".bsm-modal-close, .bsm-modal-overlay").on("click", function (e) {
-        e.preventDefault(); // Prevent default action
+        e.preventDefault();
         $(".bsm-modal, .bsm-modal-overlay").fadeOut();
     });
-
 });

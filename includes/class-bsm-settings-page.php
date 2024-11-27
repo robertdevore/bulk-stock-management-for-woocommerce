@@ -77,7 +77,7 @@ class BSM_Settings_Page {
 
         add_settings_field(
             'bsm_enable_reporting',
-            __( 'Enable Stock Reporting', 'bsm-woocommerce' ),
+            esc_html__( 'Enable Stock Reporting', 'bsm-woocommerce' ),
             function () {
                 $value = get_option( 'bsm_enable_reporting', 'yes' );
                 echo '<input type="checkbox" name="bsm_enable_reporting" value="yes" ' . checked( $value, 'yes', false ) . ' />';
@@ -97,7 +97,7 @@ class BSM_Settings_Page {
                     'stock_status' => 'yes',
                     'backorders'   => 'yes',
                 ] );
-        
+
                 $columns = [
                     'product_name' => esc_html__( 'Product Name', 'bsm-woocommerce' ),
                     'sku'          => esc_html__( 'SKU', 'bsm-woocommerce' ),
@@ -105,7 +105,7 @@ class BSM_Settings_Page {
                     'stock_status' => esc_html__( 'Stock Status', 'bsm-woocommerce' ),
                     'backorders'   => esc_html__( 'Backorders', 'bsm-woocommerce' ),
                 ];
-        
+
                 foreach ( $columns as $key => $label ) {
                     echo '<label style="display:block; margin-bottom: 8px;">';
                     echo '<input type="checkbox" name="bsm_report_columns[' . esc_attr( $key ) . ']" value="yes" ' . checked( $options[ $key ] ?? '', 'yes', false ) . ' />';
@@ -115,7 +115,7 @@ class BSM_Settings_Page {
             },
             'bsm-settings',
             'bsm_general_settings'
-        );        
+        );
 
         add_settings_field(
             'bsm_default_filters',
@@ -143,11 +143,11 @@ class BSM_Settings_Page {
                 <?php echo esc_html__( 'Bulk Stock Management Settings', 'bsm-woocommerce' ); ?>
                 <a id="bsm-woocommerce-support-btn" href="https://robertdevore.com/contact/" target="_blank" class="button button-alt" style="margin-left: 10px;">
                     <span class="dashicons dashicons-format-chat" style="vertical-align: middle;"></span>
-                    <?php echo esc_html__( 'Support', 'bluesky-feed' ); ?>
+                    <?php echo esc_html__( 'Support', 'bsm-woocommerce' ); ?>
                 </a>
                 <a id="bsm-woocommerce-docs-btn" href="https://robertdevore.com/articles/bulk-stock-management-for-woocommerce/" target="_blank" class="button button-alt" style="margin-left: 5px;">
                     <span class="dashicons dashicons-media-document" style="vertical-align: middle;"></span>
-                    <?php echo esc_html__( 'Documentation', 'bluesky-feed' ); ?>
+                    <?php echo esc_html__( 'Documentation', 'bsm-woocommerce' ); ?>
                 </a>
             </h1>
             <hr />
@@ -172,8 +172,8 @@ class BSM_Settings_Page {
         $screen = get_current_screen();
 
         if ( $screen && $screen->id === 'woocommerce_page_bsm-settings' ) {
-            wp_enqueue_style( 'bsm-admin', BSM_PLUGIN_URL . 'assets/admin.css', [], '1.0.0' );
-            wp_enqueue_script( 'bsm-admin', BSM_PLUGIN_URL . 'assets/admin.js', [ 'jquery' ], '1.0.0', true );
+            wp_enqueue_style( 'bsm-admin', BSM_PLUGIN_URL . 'assets/admin.css', [], BSM_PLUGIN_VERSION );
+            wp_enqueue_script( 'bsm-admin', BSM_PLUGIN_URL . 'assets/admin.js', [ 'jquery' ], BSM_PLUGIN_VERSION, true );
         }
     }
 
@@ -181,6 +181,8 @@ class BSM_Settings_Page {
      * Sanitizes checkbox input.
      *
      * @param string $value Checkbox value.
+     * 
+     * @since  1.0.0
      * @return string Sanitized value.
      */
     public function sanitize_checkbox( $value ) {

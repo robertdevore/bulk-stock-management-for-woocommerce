@@ -72,7 +72,6 @@ textarea {
     }
 }
 
-/* Modal Overlay */
 .bsm-modal-overlay {
     position: fixed;
     top: 0;
@@ -84,7 +83,6 @@ textarea {
     display: none;
 }
 
-/* Modal Box */
 .bsm-modal {
     position: fixed;
     top: 50%;
@@ -99,7 +97,6 @@ textarea {
     display: none;
 }
 
-/* Modal Header */
 .bsm-modal-header {
     display: flex;
     justify-content: space-between;
@@ -127,7 +124,6 @@ textarea {
     color: #444;
 }
 
-/* Modal Body */
 .bsm-modal-body {
     margin-bottom: 20px;
 }
@@ -147,7 +143,6 @@ textarea {
     border-radius: 4px;
 }
 
-/* Modal Footer */
 .bsm-modal-footer {
     display: flex;
     justify-content: flex-end;
@@ -165,13 +160,11 @@ textarea {
     margin: 20px 0;
 }
 
-/* Flex container for layout */
 .bsm-flex-container {
     display: flex;
     gap: 20px;
 }
 
-/* Left column styling */
 .bsm-left-column {
     flex: 1;
     max-width: 400px;
@@ -180,12 +173,10 @@ textarea {
     gap: 20px;
 }
 
-/* Right column styling */
 .bsm-right-column {
     flex: 2;
 }
 
-/* Summary styling */
 .bsm-summary {
     background: #fff;
     border: 1px solid #ddd;
@@ -210,7 +201,6 @@ textarea {
     text-align: center;
 }
 
-/* Out-of-stock box styling */
 .bsm-out-of-stock-box {
     background: #fff;
     border: 1px solid #ddd;
@@ -247,7 +237,6 @@ textarea {
     text-decoration: underline;
 }
 
-/* BSM Charts Styling */
 .bsm-charts {
     flex: 2;
     background-color: #fff;

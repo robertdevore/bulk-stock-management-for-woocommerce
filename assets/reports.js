@@ -4,12 +4,12 @@ jQuery(document).ready(function ($) {
         nonce: bsm_report_data.nonce,
     }, function (response) {
         if (response.success) {
-            // Update Summary
+            // Update Summary.
             $("#bsm-total-products").text(response.data.total_products);
             $("#bsm-in-stock").text(response.data.in_stock);
             $("#bsm-out-of-stock").text(response.data.out_of_stock);
 
-            // Populate Charts
+            // Populate Charts.
             new Chart($("#bsm-stock-status-chart"), {
                 type: "pie",
                 data: {
@@ -25,7 +25,7 @@ jQuery(document).ready(function ($) {
                 }
             });
 
-            // Populate Out-of-Stock Table (Limit to 10 items)
+            // Populate Out-of-Stock Table (Limit to 10 items).
             let outOfStockCount = 0;
             response.data.products.forEach(function (product) {
                 if (product.stock_status.toLowerCase() === "outofstock" && outOfStockCount < 10) {
@@ -43,7 +43,7 @@ jQuery(document).ready(function ($) {
                 }
             });
 
-            // Show a note if there are more than 10 out-of-stock products
+            // Show a note if there are more than 10 out-of-stock products.
             if (response.data.out_of_stock > 10) {
                 $("#bsm-out-of-stock-table tbody").append(`
                     <tr>

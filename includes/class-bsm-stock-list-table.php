@@ -27,7 +27,7 @@ class BSM_Stock_List_Table extends WP_List_Table {
     /**
      * Defines the columns for the table.
      *
-     * @since 1.0.0
+     * @since  1.0.0
      * @return array Associative array of column headers.
      */
     public function get_columns() {
@@ -44,7 +44,7 @@ class BSM_Stock_List_Table extends WP_List_Table {
     /**
      * Defines sortable columns.
      *
-     * @since 1.0.0
+     * @since  1.0.0
      * @return array Associative array of sortable columns.
      */
     public function get_sortable_columns() {
@@ -58,7 +58,7 @@ class BSM_Stock_List_Table extends WP_List_Table {
     /**
      * Defines bulk actions available for the table.
      *
-     * @since 1.0.0
+     * @since  1.0.0
      * @return array Associative array of bulk actions.
      */
     public function get_bulk_actions() {
@@ -73,26 +73,26 @@ class BSM_Stock_List_Table extends WP_List_Table {
      *
      * Retrieves and processes product data for display, including search, filters, and pagination.
      *
-     * @since 1.0.0
+     * @since  1.0.0
      * @return void
      */
     public function prepare_items() {
         global $wpdb;
-    
+
         $search_term  = isset( $_REQUEST['s'] ) ? sanitize_text_field( $_REQUEST['s'] ) : ''; // Search term
         $stock_status = isset( $_REQUEST['stock_status'] ) ? sanitize_text_field( $_REQUEST['stock_status'] ) : ''; // Stock status filter
         $orderby      = isset( $_REQUEST['orderby'] ) ? sanitize_sql_orderby( $_REQUEST['orderby'] ) : 'name'; // Sort column
         $order        = isset( $_REQUEST['order'] ) && in_array( strtolower( $_REQUEST['order'] ), [ 'asc', 'desc' ], true ) ? strtoupper( $_REQUEST['order'] ) : 'ASC'; // Sort direction
-    
-        // Map table columns to database columns
+
+        // Map table columns to database columns.
         $sortable_columns_map = [
             'name'      => 'p.post_title',
             'sku'       => "pm.meta_value",
             'stock_qty' => "CAST(pm_stock.meta_value AS UNSIGNED)",
         ];
         $orderby_column = $sortable_columns_map[$orderby] ?? 'p.post_title';
-    
-        // Base query
+
+        // Base query.
         $query = "SELECT p.ID, p.post_title, 
                          pm.meta_value AS sku, 
                          pm_stock.meta_value AS stock_qty, 
@@ -102,8 +102,8 @@ class BSM_Stock_List_Table extends WP_List_Table {
                   LEFT JOIN {$wpdb->postmeta} pm_stock ON p.ID = pm_stock.post_id AND pm_stock.meta_key = '_stock'
                   LEFT JOIN {$wpdb->postmeta} pm_stock_status ON p.ID = pm_stock_status.post_id AND pm_stock_status.meta_key = '_stock_status'
                   WHERE p.post_type = 'product' AND p.post_status = 'publish'";
-    
-        // Add search term
+
+        // Add search term.
         if ( $search_term ) {
             $query .= $wpdb->prepare(
                 " AND (p.post_title LIKE %s OR pm.meta_value LIKE %s)",
@@ -111,48 +111,48 @@ class BSM_Stock_List_Table extends WP_List_Table {
                 '%' . $wpdb->esc_like( $search_term ) . '%'
             );
         }
-    
-        // Add stock status filter
+
+        // Add stock status filter.
         if ( $stock_status ) {
             $query .= $wpdb->prepare(
                 " AND pm_stock_status.meta_value = %s",
                 $stock_status
             );
         }
-    
-        // Sorting
+
+        // Sorting.
         $query .= " GROUP BY p.ID ORDER BY $orderby_column $order";
-    
-        // Pagination
-        $per_page     = 40;
+
+        // Pagination.
+        $per_page     = 20;
         $current_page = $this->get_pagenum();
         $offset       = ( $current_page - 1 ) * $per_page;
-    
+
         $total_items_query = "SELECT COUNT(*) FROM ({$query}) AS total_items";
         $total_items       = $wpdb->get_var( $total_items_query );
-    
+
         $query .= $wpdb->prepare( " LIMIT %d OFFSET %d", $per_page, $offset );
-    
+
         $results = $wpdb->get_results( $query, ARRAY_A );
-    
-        // Prepare items
+
+        // Prepare items.
         $this->items = array_map( function ( $row ) {
             return [
                 'ID'           => $row['ID'],
                 'name'         => $row['post_title'],
-                'sku'          => $row['sku'] ?: __( 'N/A', 'bsm-woocommerce' ),
+                'sku'          => $row['sku'] ?: esc_html__( 'N/A', 'bsm-woocommerce' ),
                 'stock_qty'    => intval( $row['stock_qty'] ),
-                'stock_status' => $row['stock_status'] === 'instock' ? __( 'In Stock', 'bsm-woocommerce' ) : __( 'Out of Stock', 'bsm-woocommerce' ),
+                'stock_status' => $row['stock_status'] === 'instock' ? esc_html__( 'In Stock', 'bsm-woocommerce' ) : __( 'Out of Stock', 'bsm-woocommerce' ),
             ];
         }, $results );
-    
-        // Set up table headers and pagination
+
+        // Set up table headers and pagination.
         $this->_column_headers = [
             $this->get_columns(),
             [],
             $this->get_sortable_columns(),
         ];
-    
+
         $this->set_pagination_args( [
             'total_items' => $total_items,
             'per_page'    => $per_page,
@@ -233,7 +233,7 @@ class BSM_Stock_List_Table extends WP_List_Table {
      *
      * Iterates over the items and renders each row.
      *
-     * @since 1.0.0
+     * @since  1.0.0
      * @return void
      */
     public function display_rows() {
@@ -245,7 +245,7 @@ class BSM_Stock_List_Table extends WP_List_Table {
     /**
      * Displays a message when no items are found.
      *
-     * @since 1.0.0
+     * @since  1.0.0
      * @return void
      */
     public function no_items() {
@@ -259,7 +259,7 @@ class BSM_Stock_List_Table extends WP_List_Table {
      *
      * @param string $which Top or bottom position.
      * 
-     * @since 1.0.0
+     * @since  1.0.0
      * @return void
      */
     public function extra_tablenav( $which ) {
@@ -318,16 +318,16 @@ class BSM_Stock_List_Table extends WP_List_Table {
 }
 
 add_action( 'wp_ajax_bsm_delete_product', function () {
-    // Verify nonce
+    // Verify nonce.
     check_ajax_referer( 'bsm_admin_nonce', 'nonce' );
 
-    // Sanitize and validate product ID
+    // Sanitize and validate product ID.
     $product_id = isset( $_POST['product_id'] ) ? intval( $_POST['product_id'] ) : 0;
     if ( ! $product_id ) {
         wp_send_json_error( esc_html__( 'Invalid product ID.', 'bsm-woocommerce' ) );
     }
 
-    // Attempt to trash the product
+    // Attempt to trash the product.
     $result = wp_trash_post( $product_id );
     if ( ! $result ) {
         wp_send_json_error( esc_html__( 'Failed to delete the product.', 'bsm-woocommerce' ) );
@@ -337,71 +337,70 @@ add_action( 'wp_ajax_bsm_delete_product', function () {
 } );
 
 add_action( 'wp_ajax_bsm_update_stock_fields', function () {
-    // Verify nonce
+    // Verify nonce.
     check_ajax_referer( 'bsm_admin_nonce', 'nonce' );
 
-    $product_id    = intval( $_POST['product_id'] ?? 0 );
-    $stock_qty     = intval( $_POST['stock_qty'] ?? 0 );
-    $stock_status  = sanitize_text_field( $_POST['stock_status'] ?? '' );
-    $backorders    = sanitize_text_field( $_POST['backorders'] ?? '' );
+    $product_id   = intval( $_POST['product_id'] ?? 0 );
+    $stock_qty    = intval( $_POST['stock_qty'] ?? 0 );
+    $stock_status = sanitize_text_field( $_POST['stock_status'] ?? '' );
+    $backorders   = sanitize_text_field( $_POST['backorders'] ?? '' );
 
     if ( ! $product_id ) {
-        wp_send_json_error( __( 'Invalid product ID.', 'bsm-woocommerce' ) );
+        wp_send_json_error( esc_html__( 'Invalid product ID.', 'bsm-woocommerce' ) );
     }
 
     $product = wc_get_product( $product_id );
     if ( ! $product ) {
-        wp_send_json_error( __( 'Product not found.', 'bsm-woocommerce' ) );
+        wp_send_json_error( esc_html__( 'Product not found.', 'bsm-woocommerce' ) );
     }
 
     try {
-        // Update stock quantity
+        // Update stock quantity.
         $product->set_stock_quantity( $stock_qty );
 
-        // Update stock status
+        // Update stock status.
         if ( $stock_status ) {
             $product->set_stock_status( $stock_status );
         }
 
-        // Update backorders
+        // Update backorders.
         if ( $backorders ) {
             $product->set_backorders( $backorders );
         }
 
-        // Save product changes
+        // Save product changes.
         $product->save();
 
-        // Manually update stock meta for consistency
+        // Manually update stock meta for consistency.
         update_post_meta( $product_id, '_stock', $stock_qty );
         update_post_meta( $product_id, '_stock_status', $stock_status );
         update_post_meta( $product_id, '_backorders', $backorders );
 
-        // Trigger WooCommerce stock change hooks
+        // Trigger WooCommerce stock change hooks.
         do_action( 'woocommerce_product_set_stock', $product );
         do_action( 'woocommerce_product_stock_changed', $product_id );
 
-        wp_send_json_success( __( 'Product updated successfully.', 'bsm-woocommerce' ) );
+        wp_send_json_success( esc_html__( 'Product updated successfully.', 'bsm-woocommerce' ) );
     } catch ( Exception $e ) {
-        wp_send_json_error( sprintf( __( 'Failed to update product: %s', 'bsm-woocommerce' ), $e->getMessage() ) );
+        wp_send_json_error( sprintf( esc_html__( 'Failed to update product: %s', 'bsm-woocommerce' ), $e->getMessage() ) );
     }
 } );
 
-
 add_action( 'wp_ajax_bsm_get_product_data', function () {
-    // Verify nonce
+    // Verify nonce.
     check_ajax_referer( 'bsm_admin_nonce', 'nonce' );
 
     $product_id = intval( $_POST['product_id'] ?? 0 );
     if ( ! $product_id ) {
-        wp_send_json_error( __( 'Invalid product ID.', 'bsm-woocommerce' ) );
+        wp_send_json_error( esc_html__( 'Invalid product ID.', 'bsm-woocommerce' ) );
     }
 
     $product = wc_get_product( $product_id );
     if ( ! $product ) {
-        wp_send_json_error( __( 'Product not found.', 'bsm-woocommerce' ) );
+        wp_send_json_error( esc_html__( 'Product not found.', 'bsm-woocommerce' ) );
     }
 
-    // Send product data
+    // Send product data.
     wp_send_json_success( [
         'stock_qty'    => $product->get_stock_quantity(),
         'stock_status' => $product->get_stock_status(),

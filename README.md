@@ -1,8 +1,8 @@
 # Bulk Stock Management for WooCommerce®
 
-![Bulk Stock Management for WooCommerce](https://your-image-url.com/banner.jpg)
+**Bulk Stock Management for WooCommerce®** is a free plugin that simplifies the process of managing stock levels and generating stock reports for WooCommerce products. 
 
-**Bulk Stock Management for WooCommerce®** is a powerful plugin that simplifies the process of managing stock levels and generating stock reports for WooCommerce products. With an intuitive interface, bulk actions, customizable reports, and AJAX-powered modals, this plugin is designed to improve the efficiency of stock management.
+With an intuitive interface, bulk actions, customizable reports, and AJAX-powered modals, this plugin is designed to improve the efficiency of stock management.
 
 ---
 

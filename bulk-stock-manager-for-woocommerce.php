@@ -49,6 +49,22 @@ use RobertDevore\WPComCheck\WPComPluginHandler;
 
 new WPComPluginHandler( plugin_basename( __FILE__ ), 'https://robertdevore.com/why-this-plugin-doesnt-support-wordpress-com-hosting/' );
 
+/**
+ * Load plugin text domain for translations
+ * 
+ * @since 1.0.1
+ * @return void
+ */
+function bsm_load_textdomain() {
+    load_plugin_textdomain( 
+        'bsm-woocommerce', 
+        false, 
+        dirname( plugin_basename( __FILE__ ) ) . '/languages/'
+    );
+}
+add_action( 'plugins_loaded', 'bsm_load_textdomain' );
+
+
 // Define plugin constants.
 define( 'BSM_PLUGIN_VERSION', '1.0.0' );
 define( 'BSM_PLUGIN_PATH', plugin_dir_path( __FILE__ ) );

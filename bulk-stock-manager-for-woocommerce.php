@@ -12,7 +12,7 @@
   * Plugin Name: Bulk Stock Management for WooCommerce®
   * Description: Manage stock levels and generate stock reports for WooCommerce® products.
   * Plugin URI:  https://github.com/robertdevore/bulk-stock-management-for-woocommerce/
-  * Version:     1.0.0
+  * Version:     1.0.1
   * Author:      Robert DeVore
   * Author URI:  https://robertdevore.com/
   * License:     GPL-2.0+
@@ -64,9 +64,8 @@ function bsm_load_textdomain() {
 }
 add_action( 'plugins_loaded', 'bsm_load_textdomain' );
 
-
 // Define plugin constants.
-define( 'BSM_PLUGIN_VERSION', '1.0.0' );
+define( 'BSM_PLUGIN_VERSION', '1.0.1' );
 define( 'BSM_PLUGIN_PATH', plugin_dir_path( __FILE__ ) );
 define( 'BSM_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 

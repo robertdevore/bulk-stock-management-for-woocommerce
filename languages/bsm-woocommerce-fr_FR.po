@@ -1,0 +1,313 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Bulk Stock Management for WooCommerce®\n"
+"POT-Creation-Date: 2025-02-18 14:11-0500\n"
+"PO-Revision-Date: 2025-02-18 14:12-0500\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: fr_FR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 3.5\n"
+"X-Poedit-Basepath: ..\n"
+"X-Poedit-Flags-xgettext: --add-comments=translators:\n"
+"X-Poedit-WPHeader: bulk-stock-manager-for-woocommerce.php\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: __;_e;_n:1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;esc_attr__;"
+"esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c;"
+"_n_noop:1,2;_nx_noop:3c,1,2;__ngettext_noop:1,2\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPathExcluded-0: *.min.js\n"
+"X-Poedit-SearchPathExcluded-1: vendor\n"
+
+#: bulk-stock-manager-for-woocommerce.php:93
+msgid "Bulk Stock Management requires WooCommerce to be active."
+msgstr "La gestion des stocks en vrac nécessite que WooCommerce soit actif."
+
+#: includes/class-bsm-settings-page.php:32
+#: includes/class-bsm-settings-page.php:33
+msgid "Stock Settings"
+msgstr "Réglages du stock"
+
+#: includes/class-bsm-settings-page.php:61
+msgid "The default filters must be valid JSON."
+msgstr "Les filtres par défaut doivent être des JSON valides."
+
+#: includes/class-bsm-settings-page.php:71
+msgid "General Settings"
+msgstr "Réglages généraux"
+
+#: includes/class-bsm-settings-page.php:73
+msgid "Configure the default behavior of the Bulk Stock Management plugin."
+msgstr ""
+"Configurer le comportement par défaut du plugin de gestion des stocks en "
+"vrac."
+
+#: includes/class-bsm-settings-page.php:80
+msgid "Enable Stock Reporting"
+msgstr "Activer les rapports sur les stocks"
+
+#: includes/class-bsm-settings-page.php:91
+msgid "Report Columns"
+msgstr "Colonnes du rapport"
+
+#: includes/class-bsm-settings-page.php:102
+#: includes/class-bsm-stock-reports-page.php:118
+#: includes/class-bsm-stock-reports-page.php:179
+msgid "Product Name"
+msgstr "Nom du produit"
+
+#: includes/class-bsm-settings-page.php:103
+#: includes/class-bsm-stock-list-table.php:37
+#: includes/class-bsm-stock-reports-page.php:119
+#: includes/class-bsm-stock-reports-page.php:182
+msgid "SKU"
+msgstr "SKU"
+
+#: includes/class-bsm-settings-page.php:104
+#: includes/class-bsm-stock-list-table.php:38
+#: includes/class-bsm-stock-reports-page.php:185
+msgid "Stock Quantity"
+msgstr "Quantité en stock"
+
+#: includes/class-bsm-settings-page.php:105
+#: includes/class-bsm-stock-list-table.php:39
+#: includes/class-bsm-stock-reports-page.php:188
+msgid "Stock Status"
+msgstr "État du stock"
+
+#: includes/class-bsm-settings-page.php:106
+#: includes/class-bsm-stock-reports-page.php:191
+msgid "Backorders"
+msgstr "Réapprovisionnement"
+
+#: includes/class-bsm-settings-page.php:122
+msgid "Default Product Filters"
+msgstr "Filtres de produits par défaut"
+
+#: includes/class-bsm-settings-page.php:126
+msgid "Enter default filters as JSON (e.g., {\"stock_status\":\"instock\"})."
+msgstr ""
+"Saisir les filtres par défaut sous forme de JSON (par exemple, "
+"{\"stock_status\":\"instock\"})."
+
+#: includes/class-bsm-settings-page.php:143
+msgid "Bulk Stock Management Settings"
+msgstr "Paramètres de gestion des stocks en vrac"
+
+#: includes/class-bsm-settings-page.php:146
+#: includes/class-bsm-stock-management-page.php:67
+#: includes/class-bsm-stock-reports-page.php:80
+msgid "Support"
+msgstr "Support"
+
+#: includes/class-bsm-settings-page.php:150
+#: includes/class-bsm-stock-management-page.php:71
+#: includes/class-bsm-stock-reports-page.php:84
+msgid "Documentation"
+msgstr "Documentation"
+
+#: includes/class-bsm-stock-list-table.php:21
+msgid "Product"
+msgstr "Produit"
+
+#: includes/class-bsm-stock-list-table.php:22
+msgid "Products"
+msgstr "Produits"
+
+#: includes/class-bsm-stock-list-table.php:36
+msgid "Name"
+msgstr "Nom"
+
+#: includes/class-bsm-stock-list-table.php:40
+msgid "Actions"
+msgstr "Actions"
+
+#: includes/class-bsm-stock-list-table.php:66
+msgid "Mark “In Stock”"
+msgstr "Marquer \"En stock\""
+
+#: includes/class-bsm-stock-list-table.php:67
+msgid "Mark “Out of Stock”"
+msgstr "Marquer \"En rupture de stock\""
+
+#: includes/class-bsm-stock-list-table.php:143
+msgid "N/A"
+msgstr "N/A"
+
+#: includes/class-bsm-stock-list-table.php:145
+#: includes/class-bsm-stock-list-table.php:272
+#: includes/class-bsm-stock-management-page.php:107
+#: includes/class-bsm-stock-reports-page.php:99
+msgid "In Stock"
+msgstr "En stock"
+
+#: includes/class-bsm-stock-list-table.php:145
+#: includes/class-bsm-stock-list-table.php:275
+#: includes/class-bsm-stock-management-page.php:108
+#: includes/class-bsm-stock-reports-page.php:103
+msgid "Out of Stock"
+msgstr "Rupture de stock"
+
+#: includes/class-bsm-stock-list-table.php:225
+msgid "Edit"
+msgstr "Modifier"
+
+#: includes/class-bsm-stock-list-table.php:227
+msgid "Delete"
+msgstr "Supprimer"
+
+#: includes/class-bsm-stock-list-table.php:252
+msgid "No products found."
+msgstr "Aucun produit trouvé."
+
+#: includes/class-bsm-stock-list-table.php:270
+msgid "All Stock Statuses"
+msgstr "Tous les états des stocks"
+
+#: includes/class-bsm-stock-list-table.php:278
+msgid "Filter"
+msgstr "Filtre"
+
+#: includes/class-bsm-stock-list-table.php:327
+#: includes/class-bsm-stock-list-table.php:349
+#: includes/class-bsm-stock-list-table.php:395
+msgid "Invalid product ID."
+msgstr "Identifiant de produit non valide."
+
+#: includes/class-bsm-stock-list-table.php:333
+msgid "Failed to delete the product."
+msgstr "Échec de la suppression du produit."
+
+#: includes/class-bsm-stock-list-table.php:336
+msgid "Product moved to trash."
+msgstr "Le produit a été déplacé vers la poubelle."
+
+#: includes/class-bsm-stock-list-table.php:354
+#: includes/class-bsm-stock-list-table.php:400
+#: includes/class-bsm-stock-management-page.php:153
+msgid "Product not found."
+msgstr "Aucun produit trouvé."
+
+#: includes/class-bsm-stock-list-table.php:383
+msgid "Product updated successfully."
+msgstr "Le produit a été mis à jour avec succès."
+
+#: includes/class-bsm-stock-list-table.php:385
+#, php-format
+msgid "Failed to update product: %s"
+msgstr "Échec de la mise à jour du produit : %s"
+
+#: includes/class-bsm-stock-management-page.php:30
+#: includes/class-bsm-stock-management-page.php:31
+msgid "Stock Management"
+msgstr "Gestion de stock"
+
+#: includes/class-bsm-stock-management-page.php:64
+msgid "Bulk Stock Management"
+msgstr "Gestion des stocks en vrac"
+
+#: includes/class-bsm-stock-management-page.php:91
+msgid "Search Products"
+msgstr "Recherche produits"
+
+#: includes/class-bsm-stock-management-page.php:98
+msgid "Edit Product Stock"
+msgstr "Modifier le stock de produits"
+
+#: includes/class-bsm-stock-management-page.php:102
+msgid "Stock Quantity:"
+msgstr "Quantité en stock :"
+
+#: includes/class-bsm-stock-management-page.php:105
+msgid "Stock Status:"
+msgstr "État du stock :"
+
+#: includes/class-bsm-stock-management-page.php:111
+msgid "Backorders:"
+msgstr "Commandes en attente :"
+
+#: includes/class-bsm-stock-management-page.php:113
+msgid "Do Not Allow"
+msgstr "Ne pas autoriser"
+
+#: includes/class-bsm-stock-management-page.php:114
+msgid "Allow, Notify Customer"
+msgstr "Autoriser, notifier le client"
+
+#: includes/class-bsm-stock-management-page.php:115
+msgid "Allow"
+msgstr "Autoriser"
+
+#: includes/class-bsm-stock-management-page.php:120
+msgid "Save Changes"
+msgstr "Sauvegarder les changements"
+
+#: includes/class-bsm-stock-management-page.php:122
+msgid "Cancel"
+msgstr "Annuler"
+
+#: includes/class-bsm-stock-management-page.php:147
+msgid "Invalid product ID or stock quantity."
+msgstr "ID de produit ou quantité en stock non valide."
+
+#: includes/class-bsm-stock-management-page.php:178
+msgid "Stock updated successfully."
+msgstr "Stock mis à jour avec succès."
+
+#: includes/class-bsm-stock-management-page.php:180
+#, php-format
+msgid "Failed to update stock: %s"
+msgstr "Échec de la mise à jour du stock : %s"
+
+#: includes/class-bsm-stock-reports-page.php:34
+#: includes/class-bsm-stock-reports-page.php:35
+#: includes/class-bsm-stock-reports-page.php:77
+msgid "Stock Reports"
+msgstr "Rapports de stock"
+
+#: includes/class-bsm-stock-reports-page.php:95
+msgid "Total Products"
+msgstr "Total produits"
+
+#: includes/class-bsm-stock-reports-page.php:108
+msgid "Download CSV"
+msgstr "Télécharger CSV"
+
+#: includes/class-bsm-stock-reports-page.php:114
+msgid "Out of Stock Products"
+msgstr "Produits en rupture de stock"
+
+#: includes/class-bsm-stock-reports-page.php:149
+msgid "You do not have sufficient permissions to access this page."
+msgstr ""
+"Vous n'avez pas les permissions suffisantes pour accéder à cette page."
+
+#: includes/class-bsm-stock-reports-page.php:176
+msgid "Product ID"
+msgstr "ID produit"
+
+#. Plugin Name of the plugin/theme
+msgid "Bulk Stock Management for WooCommerce®"
+msgstr "Gestion des stocks en vrac pour WooCommerce"
+
+#. Plugin URI of the plugin/theme
+msgid "https://github.com/robertdevore/bulk-stock-management-for-woocommerce/"
+msgstr ""
+"https://github.com/robertdevore/bulk-stock-management-for-woocommerce/"
+
+#. Description of the plugin/theme
+msgid ""
+"Manage stock levels and generate stock reports for WooCommerce® products."
+msgstr ""
+"Gérer les niveaux de stock et générer des rapports de stock pour les "
+"produits WooCommerce®."
+
+#. Author of the plugin/theme
+msgid "Robert DeVore"
+msgstr "Robert DeVore"
+
+#. Author URI of the plugin/theme
+msgid "https://robertdevore.com/"
+msgstr "https://robertdevore.com/"
